@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SholatKu • Jadwal Sholat</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#0E5A3E">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="SholatKu">
+<link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/3602/3602148.png">
+<link rel="icon" type="image/png" href="https://cdn-icons-png.flaticon.com/512/3602/3602148.png">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;font-family:'Plus Jakarta Sans',sans-serif;-webkit-tap-highlight-color:transparent}
+body{margin:0;background:#0B1F1A;color:#fff;padding:0 0 90px;min-height:100vh}
+.header{background:linear-gradient(135deg,#0E5A3E 0%,#0A3D2A 50%,#082F21 100%);padding:20px 18px 100px;border-radius:0 0 32px 32px;position:relative;overflow:hidden}
+.header::after{content:'🕌';position:absolute;right:-10px;top:10px;font-size:120px;opacity:.12;transform:rotate(-10deg)}
+.top-row{display:flex;justify-content:space-between;align-items:center;position:relative;z-index:2}
+.logo{display:flex;align-items:center;gap:10px}
+.logo-icon{width:44px;height:44px;background:rgba(255,255,255,.18);backdrop-filter:blur(10px);border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:24px;border:1px solid rgba(255,255,255,.2)}
+.logo b{font-size:16px;line-height:1.1;display:block}
+.logo small{font-size:11px;opacity:.8}
+.pill{background:rgba(255,255,255,.15);backdrop-filter:blur(10px);padding:8px 12px;border-radius:20px;font-size:12px;font-weight:700;border:1px solid rgba(255,255,255,.15);cursor:pointer}
+.lang-select{background:rgba(255,255,255,.15);color:#fff;border:1px solid rgba(255,255,255,.2);padding:8px 8px;border-radius:20px;font-size:12px;font-weight:800;cursor:pointer;outline:none}
+.lang-select option{color:#111}
+.jam-besar{text-align:center;margin-top:18px;position:relative;z-index:2}
+.jam-besar .jam{font-size:56px;font-weight:800;letter-spacing:-1px;line-height:1}
+.jam-besar .detik{font-size:22px;color:#FDE68A}
+.tanggal{font-size:13px;opacity:.9;margin-top:6px}
+.hijri{font-size:12px;color:#FDE68A;font-weight:700;background:rgba(0,0,0,.25);display:inline-block;padding:5px 12px;border-radius:20px;margin-top:8px}
+.lokasi-pill{background:#fff;color:#065F46;padding:8px 14px;border-radius:20px;display:inline-block;font-weight:800;font-size:13px;margin-top:10px;cursor:pointer;box-shadow:0 4px 12px rgba(0,0,0,.2)}
+.card-next{margin:-70px 16px 0;background:rgba(255,255,255,.96);color:#111;border-radius:24px;padding:18px;box-shadow:0 20px 40px rgba(0,0,0,.35);position:relative;z-index:3;overflow:hidden}
+.card-next::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(90deg,#F59E0B,#10B981,#0EA5E9)}
+.next-top{display:flex;justify-content:space-between;align-items:center}
+.next-top span{font-size:11px;font-weight:800;letter-spacing:1px;color:#059669;background:#D1FAE5;padding:6px 10px;border-radius:20px}
+.live{font-size:11px;font-weight:800;color:#DC2626;display:flex;align-items:center;gap:5px}
+.dot{width:8px;height:8px;background:#DC2626;border-radius:50%;animation:blink 1s infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.2}}
+.next-body{display:flex;justify-content:space-between;align-items:end;margin-top:12px}
+.next-nama{font-size:30px;font-weight:800;line-height:1}
+.next-nama small{display:block;font-size:12px;color:#6B7280;font-weight:600;margin-top:4px}
+.next-jam{font-size:36px;font-weight:800;color:#065F46;line-height:1;text-align:right}
+.next-jam small{display:block;font-size:11px;color:#999;font-weight:700}
+.countdown-box{background:#0F2A22;color:#fff;border-radius:16px;padding:12px;margin-top:14px;display:flex;justify-content:space-between;align-items:center}
+.countdown-box b{font-size:18px}
+.countdown-box small{color:#A7F3D0;display:block;font-size:11px}
+.progress{height:6px;background:#E5E7EB;border-radius:10px;margin-top:12px;overflow:hidden}
+.progress div{height:100%;background:linear-gradient(90deg,#F59E0B,#10B981);width:35%;border-radius:10px}
+.section{padding:16px}
+.section-title{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.section-title b{font-size:16px}
+.section-title span{font-size:12px;color:#A7F3D0;font-weight:700}
+.list{display:flex;flex-direction:column;gap:10px}
+.row{background:#152E27;border:1px solid rgba(255,255,255,.08);border-radius:18px;padding:14px;display:flex;justify-content:space-between;align-items:center}
+.row.active{background:linear-gradient(135deg,#059669,#047857);border-color:#34D399;box-shadow:0 8px 20px rgba(5,150,105,.4)}
+.row-left{display:flex;gap:12px;align-items:center}
+.icon-box{width:48px;height:48px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:24px}
+.nama{font-weight:800;font-size:15px}
+.nama small{display:block;font-size:11px;color:#9CA3AF;font-weight:600}
+.row.active .nama small{color:#D1FAE5}
+.waktu{font-size:20px;font-weight:800}
+.waktu small{display:block;font-size:10px;color:#9CA3AF;text-align:right}
+.switch{width:46px;height:26px;background:#374151;border-radius:20px;position:relative;cursor:pointer;flex-shrink:0;margin-left:10px}
+.switch::after{content:'';position:absolute;top:3px;left:3px;width:20px;height:20px;background:#fff;border-radius:50%;transition:.3s}
+.switch.on{background:#F59E0B}
+.switch.on::after{left:23px}
+.alarm-card{background:linear-gradient(135deg,#FEF3C7,#FDE68A);color:#92400E;border-radius:20px;padding:16px;margin-top:4px}
+.alarm-card h3{margin:0 0 4px;font-size:15px}
+.alarm-card p{margin:0 0 12px;font-size:12px;line-height:1.5;opacity:.9}
+.btn-row{display:flex;gap:8px}
+.btn{flex:1;padding:12px;border:0;border-radius:12px;font-weight:800;font-size:13px;cursor:pointer}
+.btn-hijau{background:#065F46;color:#fff}
+.btn-putih{background:#fff;color:#111;border:1px solid #E5E7EB}
+.btn-kuning{background:#F59E0B;color:#fff}
+.kiblat-card{background:#fff;color:#111;border-radius:20px;padding:16px;display:flex;gap:14px;align-items:center}
+.kompas-mini{width:70px;height:70px;border-radius:50%;background:#FEF3C7;display:flex;align-items:center;justify-content:center;font-size:34px;flex-shrink:0;border:3px solid #FDE68A;position:relative}
+.kompas-mini span{position:absolute;top:-6px;background:#DC2626;color:#fff;font-size:9px;font-weight:900;padding:2px 6px;border-radius:10px}
+.copyright{text-align:center;padding:18px 16px 0;font-size:12px;color:#6B7280;line-height:1.7}
+.copyright b{color:#9CA3AF;font-weight:700}
+.copyright span{color:#4B5563}
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:rgba(11,31,26,.95);backdrop-filter:blur(15px);border-top:1px solid rgba(255,255,255,.1);display:flex;padding:10px 16px 18px;z-index:10}
+.bottom-nav button{flex:1;background:none;border:0;color:#9CA3AF;font-size:11px;font-weight:700;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:3px}
+.bottom-nav button.active{color:#FDE68A}
+.bottom-nav button i{font-size:20px;font-style:normal}
+#popupAdzan{display:none;position:fixed;inset:0;background:rgba(0,0,0,.88);backdrop-filter:blur(5px);z-index:99;align-items:center;justify-content:center;padding:20px}
+#popupAdzan.show{display:flex}
+.popup{background:#fff;color:#111;border-radius:28px;padding:22px;text-align:center;width:100%;max-width:360px;animation:pop .3s}
+@keyframes pop{from{transform:scale(.9);opacity:0}to{transform:scale(1);opacity:1}}
+.popup h2{font-size:26px;margin:6px 0}
+.popup .jam-besar{font-size:44px;font-weight:800;color:#065F46}
+.volume-row{display:flex;gap:8px;align-items:center;margin-top:10px}
+.volume-row input{flex:1;accent-color:#059669}
+#popupLokasi{display:none;position:fixed;inset:0;background:rgba(0,0,0,.85);backdrop-filter:blur(5px);z-index:100;align-items:center;justify-content:center;padding:20px}
+#popupLokasi.show{display:flex}
+.kota-btn{display:block;width:100%;padding:12px;margin:6px 0;border:1px solid #E5E7EB;background:#F9FAFB;border-radius:12px;font-weight:700;font-size:14px;cursor:pointer;text-align:left}
+.kota-btn:hover{background:#D1FAE5}
+</style>
+</head>
+<body>
+<div class="header">
+<div class="top-row">
+<div class="logo"><div class="logo-icon">🕌</div><div><b>SholatKu</b><small data-i18n="subtitle">Jadwal Sholat Harian</small></div></div>
+<div style="display:flex;gap:6px;align-items:center">
+<select class="lang-select" id="langSelect" onchange="gantiBahasa(this.value)">
+<option value="id">🇮🇩 Indonesia</option>
+<option value="en">🇺🇸 English</option>
+<option value="ar">🕌 العربية</option>
+</select>
+<div class="pill" onclick="deteksiLokasi()">📍 <span id="pillLokasi">Deteksi...</span></div>
+</div>
+</div>
+<div class="jam-besar">
+<div class="jam"><span id="jam">00:00</span><span class="detik" id="detik">:00</span> <span style="font-size:16px;opacity:.7" id="zonaJam">WITA</span></div>
+<div class="tanggal" id="tanggal">Memuat tanggal...</div>
+<div class="hijri" id="hijri">Memuat Hijriyah...</div><br>
+<div class="lokasi-pill" id="lokasiPill" onclick="bukaPilihKota()">📍 Mendeteksi lokasi kamu...</div>
+</div>
+</div>
+<div class="card-next">
+<div class="next-top"><span data-i18n="next">✦ SHOLAT BERIKUTNYA</span><div class="live"><div class="dot"></div> LIVE</div></div>
+<div class="next-body">
+<div class="next-nama"><span id="nextNama">Dzuhur</span><small id="nextKet">Sholat tengah hari</small></div>
+<div class="next-jam"><span id="nextJam">12:08</span><small id="zonaKecil">WITA</small></div>
+</div>
+<div class="countdown-box"><div><small data-i18n="towards">Menuju Waktu Sholat</small><b id="countdown">1 jam 10 menit</b></div><div style="text-align:right"><b style="font-size:28px" id="persen">45%</b><small data-i18n="ready">Siap-siap wudhu</small></div></div>
+<div class="progress"><div id="bar"></div></div>
+<p style="font-size:11px;color:#999;margin:8px 0 0" id="infoJarak">Mendeteksi lokasi...</p>
+</div>
+<div class="section">
+<div class="section-title"><b data-i18n="today">Jadwal Hari Ini</b><span id="statusAlarmMini">Alarm Aktif</span></div>
+<div class="alarm-card">
+<h3 data-i18n="alarmTitle">🔔 Alarm Adzan</h3>
+<p data-i18n="alarmDesc">Adzan akan berbunyi otomatis saat masuk waktu sholat.</p>
+<div class="volume-row"><span style="font-size:12px;font-weight:800" data-i18n="volume">Volume:</span><input type="range" min="0" max="100" value="100" id="volAdzan" oninput="aturVolume(this.value)"><span id="volLabel" style="font-size:12px;font-weight:800">100%</span></div>
+<div class="btn-row" style="margin-top:12px">
+<button class="btn btn-hijau" onclick="aktifkanSemuaAlarm()" data-i18n="onAll">Aktifkan Semua</button>
+<button class="btn btn-putih" onclick="matikanSemuaAlarm()" data-i18n="offAll">Matikan</button>
+</div>
+<button class="btn btn-kuning" style="width:100%;margin-top:8px" onclick="mintaIzinNotifikasi()" data-i18n="notifBtn">🔔 Aktifkan Notifikasi</button>
+<p style="margin:8px 0 0;text-align:center;font-size:12px;font-weight:700" id="statusAlarm">Alarm aktif: Subuh, Dzuhur, Ashar, Maghrib, Isya</p>
+<p style="margin:4px 0 0;text-align:center;font-size:11px" id="statusNotifikasi">Notifikasi: Belum aktif</p>
+</div>
+<div class="list" id="listSholat" style="margin-top:12px"></div>
+</div>
+<div class="section" style="padding-top:0">
+<div class="section-title"><b data-i18n="kiblatTitle">Kiblat & Info</b><span id="infoKiblatKota">Lokasi Kamu</span></div>
+<div class="kiblat-card"><div class="kompas-mini">🧭<span id="derajatKiblat">292°</span></div><div><b style="font-size:15px"><span data-i18n="kiblatDir">Arah Kiblat:</span> <span id="arahKiblat">Barat Laut</span></b><p style="font-size:12px;color:#555;margin:4px 0;line-height:1.5" id="ketKiblat">Menghitung arah kiblat dari lokasi kamu...</p></div></div>
+<div style="margin-top:12px">
+<button class="btn btn-hijau" style="width:100%" onclick="deteksiLokasi()" data-i18n="updateLoc">Perbarui Lokasi</button>
+</div>
+<div class="copyright">
+<b>© 2026 Edho Tensei</b><br>
+<span>SholatKu • <span data-i18n="version">Versi 1.0</span><br><span data-i18n="method">Metode: Kemenag RI • Mazhab Syafi'i</span></span>
+</div>
+</div>
+<div class="bottom-nav">
+<button class="active"><i>🕌</i><span data-i18n="navJadwal">Jadwal</span></button>
+<button onclick="aktifkanSemuaAlarm()"><i>🔔</i><span data-i18n="navAlarm">Alarm</span></button>
+<button onclick="bukaPilihKota()"><i>📍</i><span data-i18n="navLokasi">Lokasi</span></button>
+</div>
+<div id="popupLokasi">
+<div class="popup" style="max-width:360px;text-align:left;max-height:80vh;overflow-y:auto">
+<div style="text-align:center"><div style="font-size:40px">📍</div><h2 style="font-size:20px" data-i18n="chooseLoc">Pilih Lokasi Kamu</h2><p style="font-size:13px;color:#555" data-i18n="chooseDesc">Jadwal akan menyesuaikan otomatis dengan kota ini.</p></div>
+<button class="btn btn-hijau" style="width:100%" onclick="deteksiLokasi()" data-i18n="useGps">📍 Gunakan GPS HP Saya</button>
+<div style="margin-top:12px">
+<b style="font-size:13px" data-i18n="popular">Kota Populer:</b>
+<button class="kota-btn" onclick="pilihKotaManual('Praya','Indonesia',-8.72,116.27)">📍 Praya, Lombok Tengah</button>
+<button class="kota-btn" onclick="pilihKotaManual('Mataram','Indonesia',-8.58,116.11)">📍 Mataram, Lombok</button>
+<button class="kota-btn" onclick="pilihKotaManual('Jakarta','Indonesia',-6.20,106.84)">📍 Jakarta</button>
+<button class="kota-btn" onclick="pilihKotaManual('Surabaya','Indonesia',-7.25,112.75)">📍 Surabaya</button>
+<button class="kota-btn" onclick="pilihKotaManual('Bandung','Indonesia',-6.91,107.60)">📍 Bandung</button>
+<button class="kota-btn" onclick="pilihKotaManual('Medan','Indonesia',3.59,98.67)">📍 Medan</button>
+<button class="kota-btn" onclick="pilihKotaManual('Makassar','Indonesia',-5.14,119.42)">📍 Makassar</button>
+<button class="kota-btn" onclick="pilihKotaManual('Denpasar','Indonesia',-8.65,115.21)">📍 Denpasar, Bali</button>
+<button class="kota-btn" onclick="pilihKotaManual('Yogyakarta','Indonesia',-7.79,110.37)">📍 Yogyakarta</button>
+<button class="kota-btn" onclick="pilihKotaManual('Palembang','Indonesia',-2.99,104.75)">📍 Palembang</button>
+<button class="kota-btn" onclick="pilihKotaManual('Mekkah','Saudi Arabia',21.42,39.82)">🕋 Mekkah, Arab Saudi</button>
+<button class="kota-btn" onclick="pilihKotaManual('Madinah','Saudi Arabia',24.47,39.61)">🕌 Madinah, Arab Saudi</button>
+</div>
+<label style="font-size:13px;font-weight:800;margin-top:10px;display:block" data-i18n="otherCity">Atau ketik kota lain:</label>
+<div style="display:flex;gap:6px;margin-top:6px">
+<input id="inputKota" placeholder="Contoh: Kupang, Lombok Timur..." style="flex:1;padding:11px;border:1px solid #E5E7EB;border-radius:12px;font-size:14px">
+<button class="btn btn-kuning" onclick="cariKotaKetik()" data-i18n="search">Cari</button>
+</div>
+<button class="btn btn-putih" style="width:100%;margin-top:12px" onclick="tutupPilihKota()" data-i18n="close">Tutup</button>
+</div>
+</div>
+<div id="popupAdzan">
+<div class="popup">
+<div style="font-size:56px">🕌</div>
+<h2 id="popupNama">WAKTU DZUHUR</h2>
+<div class="jam-besar" id="popupJam">12:08</div>
+<p style="color:#555;font-size:14px" data-i18n="popupDesc">Sudah masuk waktu sholat.<br>Segera ambil wudhu & sholat.</p>
+<p style="font-size:12px;color:#059669;font-weight:800" id="adzanInfo">Sedang memutar adzan...</p>
+<audio id="audioAdzan" preload="auto" playsinline webkit-playsinline></audio>
+<button class="btn btn-hijau" style="width:100%;margin-top:8px" onclick="tutupPopup()" data-i18n="done">Sudah Sholat</button>
+<button class="btn btn-putih" style="width:100%;margin-top:8px" onclick="tunda5Menit()" data-i18n="snooze">Tunda 5 Menit</button>
+</div>
+</div>
+<script>
+if('serviceWorker' in navigator){ window.addEventListener('load',()=>{ navigator.serviceWorker.register('sw.js').catch(()=>{}); }); }
+let LANG = {
+id:{subtitle:'Jadwal Sholat Harian',next:'✦ SHOLAT BERIKUTNYA',towards:'Menuju Waktu Sholat',ready:'Siap-siap wudhu',today:'Jadwal Hari Ini',alarmTitle:'🔔 Alarm Adzan',alarmDesc:'Adzan akan berbunyi otomatis saat masuk waktu sholat.',volume:'Volume:',onAll:'Aktifkan Semua',offAll:'Matikan',notifBtn:'🔔 Aktifkan Notifikasi',kiblatTitle:'Kiblat & Info',kiblatDir:'Arah Kiblat:',updateLoc:'Perbarui Lokasi',version:'Versi 1.0',method:'Metode: Kemenag RI • Mazhab Syafi\'i',navJadwal:'Jadwal',navAlarm:'Alarm',navLokasi:'Lokasi',chooseLoc:'Pilih Lokasi Kamu',chooseDesc:'Jadwal akan menyesuaikan otomatis dengan kota ini.',useGps:'📍 Gunakan GPS HP Saya',popular:'Kota Populer:',otherCity:'Atau ketik kota lain:',search:'Cari',close:'Tutup',popupDesc:'Sudah masuk waktu sholat.<br>Segera ambil wudhu & sholat.',done:'Sudah Sholat',snooze:'Tunda 5 Menit',sholat:{Subuh:'Subuh',Terbit:'Terbit',Dzuhur:'Dzuhur',Ashar:'Ashar',Maghrib:'Maghrib',Isya:'Isya'},ket:{Subuh:'Bangun, sholat sebelum terbit',Terbit:'Syuruq • Matahari terbit',Dzuhur:'Sholat tengah hari',Ashar:'Sholat sore hari',Maghrib:'Buka puasa • Maghrib',Isya:'Sholat malam hari'}},
+en:{subtitle:'Daily Prayer Schedule',next:'✦ NEXT PRAYER',towards:'Towards Prayer Time',ready:'Get ready for wudhu',today:"Today's Schedule",alarmTitle:'🔔 Adzan Alarm',alarmDesc:'Adzan will play automatically at prayer time.',volume:'Volume:',onAll:'Enable All',offAll:'Disable',notifBtn:'🔔 Enable Notifications',kiblatTitle:'Qibla & Info',kiblatDir:'Qibla Direction:',updateLoc:'Update Location',version:'Version 1.0',method:'Method: Kemenag RI • Shafi\'i Madhab',navJadwal:'Schedule',navAlarm:'Alarm',navLokasi:'Location',chooseLoc:'Choose Your Location',chooseDesc:'Schedule will adjust automatically to this city.',useGps:'📍 Use My GPS',popular:'Popular Cities:',otherCity:'Or type another city:',search:'Search',close:'Close',popupDesc:'Prayer time has arrived.<br>Take wudhu & pray now.',done:'Already Prayed',snooze:'Snooze 5 Minutes',sholat:{Subuh:'Fajr',Terbit:'Sunrise',Dzuhur:'Dhuhr',Ashar:'Asr',Maghrib:'Maghrib',Isya:'Isha'},ket:{Subuh:'Wake up, pray before sunrise',Terbit:'Syuruq • Sunrise',Dzuhur:'Midday prayer',Ashar:'Afternoon prayer',Maghrib:'Break fast • Maghrib',Isya:'Night prayer'}},
+ar:{subtitle:'مواقيت الصلاة اليومية',next:'✦ الصلاة القادمة',towards:'نحو وقت الصلاة',ready:'استعد للوضوء',today:'جدول اليوم',alarmTitle:'🔔 تنبيه الأذان',alarmDesc:'سيُرفع الأذان تلقائياً عند دخول وقت الصلاة.',volume:'الصوت:',onAll:'تفعيل الكل',offAll:'إيقاف',notifBtn:'🔔 تفعيل الإشعارات',kiblatTitle:'القبلة والمعلومات',kiblatDir:'اتجاه القبلة:',updateLoc:'تحديث الموقع',version:'الإصدار 1.0',method:'الطريقة: وزارة الشؤون الدينية • مذهب الشافعي',navJadwal:'الجدول',navAlarm:'التنبيه',navLokasi:'الموقع',chooseLoc:'اختر موقعك',chooseDesc:'سيتم تعديل الجدول تلقائياً لهذه المدينة.',useGps:'📍 استخدم GPS هاتفي',popular:'مدن شهيرة:',otherCity:'أو اكتب مدينة أخرى:',search:'بحث',close:'إغلاق',popupDesc:'حان وقت الصلاة.<br>توضأ وصلِّ الآن.',done:'صليت',snooze:'تأجيل 5 دقائق',sholat:{Subuh:'الفجر',Terbit:'الشروق',Dzuhur:'الظهر',Ashar:'العصر',Maghrib:'المغرب',Isya:'العشاء'},ket:{Subuh:'استيقظ وصل قبل الشروق',Terbit:'الشروق • طلوع الشمس',Dzuhur:'صلاة منتصف النهار',Ashar:'صلاة العصر',Maghrib:'إفطار • المغرب',Isya:'صلاة الليل'}}
+};
+let bahasa = localStorage.getItem('bahasaSholat') || (navigator.language && navigator.language.startsWith('ar') ? 'ar' : navigator.language && navigator.language.startsWith('en') ? 'en' : 'id');
+function terjemah(kunci){ return (LANG[bahasa] && LANG[bahasa][kunci]) || LANG['id'][kunci] || kunci; }
+function namaSholat(nama){ return LANG[bahasa].sholat[nama] || nama; }
+function ketSholat(nama){ return LANG[bahasa].ket[nama] || nama; }
+function gantiBahasa(b){ bahasa=b; localStorage.setItem('bahasaSholat',b); document.getElementById('langSelect').value=b; document.documentElement.lang=b; if(b==='ar'){document.body.style.direction='rtl';}else{document.body.style.direction='ltr';} document.querySelectorAll('[data-i18n]').forEach(el=>{ let k=el.getAttribute('data-i18n'); if(LANG[b][k]) el.innerHTML=LANG[b][k]; }); tampilkan(); updateStatusAlarm(); }
+let jadwal={Subuh:'04:48',Terbit:'06:02',Dzuhur:'12:08',Ashar:'15:28',Maghrib:'18:18',Isya:'19:32'};
+let jadwalCadangan={Subuh:'04:48',Terbit:'06:02',Dzuhur:'12:08',Ashar:'15:28',Maghrib:'18:18',Isya:'19:32'};
+let alarmSet=JSON.parse(localStorage.getItem('alarmSholat')||'{"Subuh":true,"Dzuhur":true,"Ashar":true,"Maghrib":true,"Isya":true,"Terbit":false}');
+let sudahBunyi={};
+let lokasi = JSON.parse(localStorage.getItem('lokasiSholat')||'null') || {nama:'Praya', negara:'Indonesia', lat:-8.72, lng:116.27, zona:'WITA'};
+let kiblatDerajat = 292;
+let ID_ADZAN_SUBUH = '1LxjcJlyjYjU53s_knz1CBLqF6FCRDdOi';
+let ID_ADZAN_BIASA = '1XOlVfr9FaQtZhdVHnXNMyIuVnBU8IWKD';
+let cacheAdzan = {};
+function aturVolume(v){ document.getElementById('volLabel').innerText=v+'%'; document.getElementById('audioAdzan').volume=v/100; }
+function updateTampilanLokasi(){
+ document.getElementById('lokasiPill').innerText='📍 '+lokasi.nama+', '+lokasi.negara;
+ document.getElementById('pillLokasi').innerText=lokasi.nama;
+ document.getElementById('zonaJam').innerText=lokasi.zona||'WITA';
+ document.getElementById('zonaKecil').innerText=lokasi.zona||'WITA';
+ document.getElementById('infoKiblatKota').innerText=lokasi.nama;
+ let lat1=lokasi.lat*Math.PI/180, lng1=lokasi.lng*Math.PI/180, lat2=21.4225*Math.PI/180, lng2=39.8262*Math.PI/180;
+ let y=Math.sin(lng2-lng1)*Math.cos(lat2);
+ let x=Math.cos(lat1)*Math.sin(lat2)-Math.sin(lat1)*Math.cos(lat2)*Math.cos(lng2-lng1);
+ kiblatDerajat=Math.round((Math.atan2(y,x)*180/Math.PI+360)%360);
+ document.getElementById('derajatKiblat').innerText=kiblatDerajat+'°';
+ let arah = kiblatDerajat>=270 && kiblatDerajat<=315 ? (bahasa==='en'?'Northwest':bahasa==='ar'?'شمال غرب':'Barat Laut') : kiblatDerajat>315 ? (bahasa==='en'?'North':bahasa==='ar'?'شمال':'Utara') : kiblatDerajat>=225 ? (bahasa==='en'?'Southwest':bahasa==='ar'?'جنوب غرب':'Barat Daya') : (bahasa==='en'?'West':bahasa==='ar'?'غرب':'Barat');
+ document.getElementById('arahKiblat').innerText=arah;
+ document.getElementById('ketKiblat').innerText = bahasa==='en' ? 'From '+lokasi.nama+', Qibla is '+kiblatDerajat+'° ('+arah+').' : bahasa==='ar' ? 'من '+lokasi.nama+'، القبلة '+kiblatDerajat+'° ('+arah+').' : 'Dari '+lokasi.nama+', kiblat mengarah ke '+kiblatDerajat+'° ('+arah+'). Kalau pakai kompas, arah '+kiblatDerajat+'°.';
+}
+function hitungZona(lng){ if(lng>=105 && lng<120) return 'WITA'; if(lng>=120) return 'WIT'; return 'WIB'; }
+async function ambilJadwal(){
+ updateTampilanLokasi();
+ try{
+  let t=new Date(); let timestamp=Math.floor(t.getTime()/1000);
+  let res=await fetch(`https://api.aladhan.com/v1/timings/${timestamp}?latitude=${lokasi.lat}&longitude=${lokasi.lng}&method=20`);
+  let data=await res.json(); let tm=data.data.timings;
+  jadwal={Subuh:tm.Fajr.slice(0,5),Terbit:tm.Sunrise.slice(0,5),Dzuhur:tm.Dhuhr.slice(0,5),Ashar:tm.Asr.slice(0,5),Maghrib:tm.Maghrib.slice(0,5),Isya:tm.Isha.slice(0,5)};
+  document.getElementById('hijri').innerText='🗓️ '+data.data.date.hijri.day+' '+data.data.date.hijri.month.en+' '+data.data.date.hijri.year+' H';
+  document.getElementById('infoJarak').innerText = bahasa==='en' ? '✅ Accurate schedule for '+lokasi.nama+' • Kemenag RI Method' : bahasa==='ar' ? '✅ جدول دقيق لـ '+lokasi.nama : '✅ Jadwal akurat untuk '+lokasi.nama+' • Metode Kemenag RI';
+  tampilkan();
+ }catch(e){
+  jadwal=jadwalCadangan;
+  document.getElementById('hijri').innerText='🗓️ Mode Offline • Jadwal Perkiraan';
+  document.getElementById('infoJarak').innerText='⚠️ Tidak ada internet, memakai jadwal cadangan.';
+  tampilkan();
+ }
+}
+function simpanLokasi(){ localStorage.setItem('lokasiSholat', JSON.stringify(lokasi)); ambilJadwal(); }
+function deteksiLokasi(){
+ document.getElementById('lokasiPill').innerText='📍 Mendeteksi lokasi...';
+ document.getElementById('popupLokasi').classList.remove('show');
+ if(!navigator.geolocation){ alert('Perangkat ini tidak mendukung GPS. Silahkan pilih kota secara manual.'); bukaPilihKota(); return; }
+ navigator.geolocation.getCurrentPosition(async (pos)=>{
+  let lat=pos.coords.latitude, lng=pos.coords.longitude;
+  lokasi.lat=lat; lokasi.lng=lng; lokasi.zona=hitungZona(lng);
+  try{
+   let r=await fetch(`https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${lat}&longitude=${lng}&localityLanguage=id`);
+   let d=await r.json();
+   lokasi.nama=d.city||d.locality||d.principalSubdivision||'Lokasi Kamu';
+   lokasi.negara=d.countryName||'Indonesia';
+  }catch(e){ lokasi.nama='Lokasi Kamu'; lokasi.negara='Indonesia'; }
+  simpanLokasi();
+  alert('Lokasi ditemukan: '+lokasi.nama+', '+lokasi.negara);
+ }, (err)=>{ alert('Gagal mendeteksi GPS: '+err.message); bukaPilihKota(); }, {timeout:10000, enableHighAccuracy:true});
+}
+function pilihKotaManual(nama, negara, lat, lng){ lokasi={nama:nama, negara:negara, lat:lat, lng:lng, zona:hitungZona(lng)}; simpanLokasi(); tutupPilihKota(); alert('Lokasi diubah ke '+nama+', '+negara); }
+function cariKotaKetik(){ let kota=document.getElementById('inputKota').value.trim(); if(!kota) return alert('Ketik nama kota dulu.'); pilihKotaByNama(kota); }
+async function pilihKotaByNama(kota){
+ try{
+  let t=new Date(); let dd=String(t.getDate()).padStart(2,'0'); let mm=String(t.getMonth()+1).padStart(2,'0'); let yyyy=t.getFullYear();
+  let res=await fetch(`https://api.aladhan.com/v1/timingsByCity/${dd}-${mm}-${yyyy}?city=${encodeURIComponent(kota)}&country=Indonesia&method=20`);
+  let data=await res.json();
+  if(data.code!==200) throw new Error('Kota tidak ditemukan');
+  let tm=data.data.timings;
+  jadwal={Subuh:tm.Fajr.slice(0,5),Terbit:tm.Sunrise.slice(0,5),Dzuhur:tm.Dhuhr.slice(0,5),Ashar:tm.Asr.slice(0,5),Maghrib:tm.Maghrib.slice(0,5),Isya:tm.Isha.slice(0,5)};
+  lokasi={nama:kota, negara:'Indonesia', lat:data.data.meta.latitude, lng:data.data.meta.longitude, zona:hitungZona(data.data.meta.longitude)};
+  localStorage.setItem('lokasiSholat', JSON.stringify(lokasi));
+  updateTampilanLokasi(); tampilkan();
+  tutupPilihKota();
+  alert('Lokasi diubah ke '+kota);
+ }catch(e){ alert('Kota "'+kota+'" tidak ditemukan.'); }
+}
+function bukaPilihKota(){ document.getElementById('popupLokasi').classList.add('show'); }
+function tutupPilihKota(){ document.getElementById('popupLokasi').classList.remove('show'); }
+function simpanAlarm(){ localStorage.setItem('alarmSholat',JSON.stringify(alarmSet)); updateStatusAlarm(); }
+function updateStatusAlarm(){
+ let aktif=Object.keys(alarmSet).filter(k=>alarmSet[k]&&k!=='Terbit');
+ let namaAktif = aktif.map(n=>namaSholat(n)).join(', ');
+ document.getElementById('statusAlarm').innerText = aktif.length>0 ? (bahasa==='en'?'Alarm active: '+namaAktif : bahasa==='ar'?'التنبيه نشط: '+namaAktif : 'Alarm aktif: '+namaAktif) : (bahasa==='en'?'All alarms off':bahasa==='ar'?'كل التنبيهات متوقفة':'Semua alarm tidak aktif');
+ document.getElementById('statusAlarmMini').innerText = aktif.length>0 ? (bahasa==='en'?'Alarm On':bahasa==='ar'?'التنبيه يعمل':'Alarm Aktif') : (bahasa==='en'?'Alarm Off':bahasa==='ar'?'التنبيه متوقف':'Alarm Mati');
+}
+function toggleSatu(nama){ alarmSet[nama]=!alarmSet[nama]; simpanAlarm(); tampilkan(); }
+function aktifkanSemuaAlarm(){ alarmSet={Subuh:true,Terbit:false,Dzuhur:true,Ashar:true,Maghrib:true,Isya:true}; simpanAlarm(); tampilkan(); if(bahasa==='en'){alert('Adzan alarm enabled.');}else if(bahasa==='ar'){alert('تم تفعيل تنبيه الأذان.');}else{alert('Alarm Adzan diaktifkan.');} if('Notification' in window) Notification.requestPermission(); }
+function matikanSemuaAlarm(){ alarmSet={Subuh:false,Terbit:false,Dzuhur:false,Ashar:false,Maghrib:false,Isya:false}; simpanAlarm(); tampilkan(); }
+function mintaIzinNotifikasi(){
+ if(!('Notification' in window)){ alert('Perangkat ini tidak mendukung notifikasi.'); return; }
+ if(Notification.permission === 'granted'){ alert('Notifikasi sudah aktif.'); document.getElementById('statusNotifikasi').innerText = 'Notifikasi: Aktif'; return; }
+ Notification.requestPermission().then((izin)=>{
+  if(izin === 'granted'){ document.getElementById('statusNotifikasi').innerText = 'Notifikasi: Aktif'; new Notification('Notifikasi SholatKu Aktif', { body: 'Kamu akan menerima notifikasi saat masuk waktu sholat.' }); if(navigator.vibrate) navigator.vibrate([500,200,500]); alert('Notifikasi berhasil diaktifkan.'); } else { document.getElementById('statusNotifikasi').innerText = 'Notifikasi: Ditolak'; alert('Notifikasi ditolak.'); }
+ });
+}
+function kirimNotifikasiSholat(nama, jam){
+ if('Notification' in window && Notification.permission === 'granted'){
+  try{ new Notification((bahasa==='en'?'Time for ':'وقت ')+namaSholat(nama)+' '+(bahasa==='en'?'has arrived':'حان'), { body: 'Sudah jam ' + jam + ' ' + lokasi.zona + ' di ' + lokasi.nama, tag: 'sholat-' + nama }); }catch(e){}
+ }
+ if(navigator.vibrate) navigator.vibrate([1000,500,1000,500,1000]);
+ document.title = 'WAKTU ' + namaSholat(nama).toUpperCase() + ' - SHOLAT!';
+ setTimeout(()=>{ document.title = 'SholatKu • Jadwal Sholat'; }, 10000);
+}
+async function mainkanAdzanBeneran(namaSholatParam){
+ if(navigator.vibrate) navigator.vibrate([1000,500,1000,500,1000]);
+ let audio = document.getElementById('audioAdzan');
+ audio.volume = document.getElementById('volAdzan').value/100;
+ let isSubuh = (namaSholatParam === 'Subuh');
+ let idPake = isSubuh ? ID_ADZAN_SUBUH : ID_ADZAN_BIASA;
+ document.getElementById('adzanInfo').innerText = 'Sedang memutar adzan...';
+ try{ let ctx = new (window.AudioContext||window.webkitAudioContext)(); if(ctx.state === 'suspended') ctx.resume(); }catch(e){}
+ if(cacheAdzan[idPake]){
+  audio.src = cacheAdzan[idPake]; audio.load();
+  try{ await audio.play(); document.getElementById('adzanInfo').innerText = 'Adzan sedang berkumandang...'; }catch(e){ document.getElementById('adzanInfo').innerText = 'Sedang memutar adzan...'; }
+  return;
+ }
+ let daftarLink = [
+  'https://drive.usercontent.google.com/u/0/uc?id=' + idPake + '&export=download',
+  'https://drive.usercontent.google.com/download?id=' + idPake + '&export=download&confirm=t',
+  'https://drive.google.com/uc?export=download&id=' + idPake
+ ];
+ for(let i=0; i<daftarLink.length; i++){
+  try{
+   let res = await fetch(daftarLink[i]);
+   if(!res.ok) continue;
+   let blob = await res.blob();
+   if(blob.type.includes('text/html') || blob.size < 10000) continue;
+   let urlBlob = URL.createObjectURL(blob);
+   cacheAdzan[idPake] = urlBlob;
+   audio.src = urlBlob; audio.load();
+   await audio.play();
+   document.getElementById('adzanInfo').innerText = 'Adzan sedang berkumandang...';
+   return;
+  }catch(e){ continue; }
+ }
+ document.getElementById('adzanInfo').innerText = 'Tidak dapat memutar adzan. Periksa koneksi internet.';
+}
+function tampilkan(){
+ let list=[
+  {nama:'Subuh',emoji:'🌅',jam:jadwal.Subuh,warna:'#FDE68A'},
+  {nama:'Terbit',emoji:'🌞',jam:jadwal.Terbit,warna:'#FEF3C7'},
+  {nama:'Dzuhur',emoji:'☀️',jam:jadwal.Dzuhur,warna:'#FEF9C3'},
+  {nama:'Ashar',emoji:'🌤️',jam:jadwal.Ashar,warna:'#FFEDD5'},
+  {nama:'Maghrib',emoji:'🌇',jam:jadwal.Maghrib,warna:'#FCE7F3'},
+  {nama:'Isya',emoji:'🌙',jam:jadwal.Isya,warna:'#DDD6FE'},
+ ];
+ let now=new Date(); let nowMenit=now.getHours()*60+now.getMinutes();
+ let next=null; let prevMenit=0;
+ for(let l of list){ let [h,m]=l.jam.split(':').map(Number); let menit=h*60+m; if(menit>nowMenit && !next){ next=l; next.menit=menit; } if(menit<=nowMenit) prevMenit=menit; }
+ if(!next){ next={...list[0]}; next.menit=1440+Number(list[0].jam.split(':')[0])*60+Number(list[0].jam.split(':')[1]); prevMenit=Number(list[5].jam.split(':')[0])*60+Number(list[5].jam.split(':')[1]); }
+ document.getElementById('listSholat').innerHTML=list.map(l=>{
+  let isNext=l.nama==next.nama; let on=alarmSet[l.nama];
+  return `<div class="row ${isNext?'active':''}"><div class="row-left"><div class="icon-box" style="background:${l.warna}">${l.emoji}</div><div class="nama">${namaSholat(l.nama)} ${isNext?'<span style="background:#FDE68A;color:#92400E;font-size:10px;padding:2px 7px;border-radius:10px">'+(bahasa==='en'?'NEXT':bahasa==='ar'?'التالي':'BERIKUTNYA')+'</span>':''}<small>${ketSholat(l.nama)}</small></div></div><div style="display:flex;align-items:center"><div class="waktu">${l.jam}<small>${lokasi.zona} ${on&&l.nama!=='Terbit'?'• '+(bahasa==='en'?'ON':bahasa==='ar'?'يعمل':'AKTIF'):'• '+(bahasa==='en'?'OFF':bahasa==='ar'?'متوقف':'NONAKTIF')}</small></div>${l.nama!=='Terbit'?`<div class="switch ${on?'on':''}" onclick="toggleSatu('${l.nama}')"></div>`:''}</div></div>`;
+ }).join('');
+ document.getElementById('nextNama').innerText=namaSholat(next.nama); document.getElementById('nextJam').innerText=next.jam; document.getElementById('nextKet').innerText=ketSholat(next.nama);
+ let sisa=next.menit-nowMenit; if(sisa<0) sisa+=1440;
+ document.getElementById('countdown').innerText = bahasa==='en' ? Math.floor(sisa/60)+' hours '+ (sisa%60)+' mins left' : bahasa==='ar' ? Math.floor(sisa/60)+' ساعة '+(sisa%60)+' دقيقة' : Math.floor(sisa/60)+' jam '+(sisa%60)+' menit lagi';
+ let total=next.menit-prevMenit; if(total<=0) total=120; let jalan=total-sisa; let persen=Math.max(5,Math.min(95,Math.round(jalan/total*100)));
+ document.getElementById('persen').innerText=persen+'%'; document.getElementById('bar').style.width=persen+'%';
+}
+function bunyiAdzanUntuk(nama,jam){
+ let kunci=nama+'-'+jam+'-'+new Date().toDateString(); if(sudahBunyi[kunci]) return; sudahBunyi[kunci]=true;
+ document.getElementById('popupNama').innerText = (bahasa==='en'?'TIME FOR '+namaSholat(nama).toUpperCase() : bahasa==='ar'?'حان وقت '+namaSholat(nama) : 'WAKTU '+namaSholat(nama).toUpperCase()+' TELAH TIBA');
+ document.getElementById('popupJam').innerText=jam+' '+lokasi.zona;
+ document.getElementById('popupAdzan').classList.add('show'); mainkanAdzanBeneran(nama);
+ kirimNotifikasiSholat(nama,jam);
+}
+function tutupPopup(){ document.getElementById('popupAdzan').classList.remove('show'); try{ document.getElementById('audioAdzan').pause(); }catch(e){} }
+function tunda5Menit(){ tutupPopup(); alert('Ditunda 5 menit.'); }
+function cekAlarm(){
+ let now=new Date(); let jm=String(now.getHours()).padStart(2,'0')+':'+String(now.getMinutes()).padStart(2,'0');
+ for(let nama in jadwal){ if(jadwal[nama]==jm && alarmSet[nama]) bunyiAdzanUntuk(nama,jadwal[nama]); }
+}
+function updateJam(){
+ let now=new Date();
+ document.getElementById('jam').innerText=String(now.getHours()).padStart(2,'0')+':'+String(now.getMinutes()).padStart(2,'0');
+ document.getElementById('detik').innerText=':'+String(now.getSeconds()).padStart(2,'0');
+ let hariId=['Minggu','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'][now.getDay()];
+ let hariEn=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'][now.getDay()];
+ let hariAr=['الأحد','الاثنين','الثلاثاء','الأربعاء','الخميس','الجمعة','السبت'][now.getDay()];
+ let bulanId=['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'][now.getMonth()];
+ let bulanEn=['January','February','March','April','May','June','July','August','September','October','November','December'][now.getMonth()];
+ let bulanAr=['يناير','فبراير','مارس','أبريل','مايو','يونيو','يوليو','أغسطس','سبتمبر','أكتوبر','نوفمبر','ديسمبر'][now.getMonth()];
+ let hari = bahasa==='en'?hariEn:bahasa==='ar'?hariAr:hariId;
+ let bulan = bahasa==='en'?bulanEn:bahasa==='ar'?bulanAr:bulanId;
+ document.getElementById('tanggal').innerText=hari+', '+now.getDate()+' '+bulan+' '+now.getFullYear();
+ tampilkan(); cekAlarm();
+}
+setInterval(updateJam,1000);
+if(!localStorage.getItem('lokasiSholat')){ setTimeout(()=>{ deteksiLokasi(); }, 800); } else { ambilJadwal(); }
+updateJam(); updateStatusAlarm();
+document.getElementById('langSelect').value=bahasa;
+gantiBahasa(bahasa);
+if('Notification' in window && Notification.permission=='default'){ Notification.requestPermission(); }
+if('wakeLock' in navigator){ document.addEventListener('click', async()=>{ try{ await navigator.wakeLock.request('screen'); }catch(e){} }); }
+document.addEventListener('touchstart', function(){ try{ let ctx = new (window.AudioContext||window.webkitAudioContext)(); if(ctx.state === 'suspended') ctx.resume(); }catch(e){} }, {once:true});
+</script>
+</body>
+</html>
