@@ -1,8 +1,12 @@
-[{
-      "relation": ["delegate_permission/common.handle_all_urls"],
-      "target": {
-        "namespace": "android_app",
-        "package_name": "io.github.efendyzaidoen.twa",
-        "sha256_cert_fingerprints": ["24:F1:71:E8:3E:12:3A:80:AF:5E:B1:8F:82:36:17:C4:85:0A:E0:98:04:FF:E6:D2:46:0D:44:AF:57:A7:7F:3A"]
-      }
-    }]
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.efendyzaidoen.sholatku",
+      "sha256_cert_fingerprints": [
+        "24:F1:71:E8:3E:12:3A:80:AF:5E:B1:8F:82:36:17:C4:85:0A:E0:98:04:FF:E6:D2:46:0D:44:AF:57:A7:7F:3A"
+      ]
+    }
+  }
+]
